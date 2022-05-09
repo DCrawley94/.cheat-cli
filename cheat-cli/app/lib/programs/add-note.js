@@ -1,4 +1,4 @@
-const { pathToCheatSheets } = process.env;
+const { pathToCheatSheets } = require('../../../../config');
 const fs = require('fs/promises');
 
 const {
@@ -18,7 +18,11 @@ async function addNote() {
 		filePath += '.json';
 	}
 
-	await fs.writeFile(filePath, JSON.stringify(updatedNotes));
+	try {
+		await fs.writeFile(filePath, JSON.stringify(updatedNotes));
+	} catch (error) {
+		console.log('Error in add-note.js', { error });
+	}
 }
 
 module.exports = addNote;

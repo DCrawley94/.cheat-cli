@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const inquirer = require('inquirer');
 const { addNote } = require('./cheat-cli/app');
 

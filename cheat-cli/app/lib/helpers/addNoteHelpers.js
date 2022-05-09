@@ -1,29 +1,32 @@
 const fs = require('fs/promises');
 const inquirer = require('inquirer');
-const { pathToCheatSheets } = process.env;
+const path = require('path');
+const { pathToCheatSheets } = require('../../../../config');
 
 async function queryTopic() {
-	const topicsList = await fs.readdir(pathToCheatSheets);
-	const topicsQuestions = [
+	const currTopics = await fs.readdir(
+		path.resolve(__dirname, pathToCheatSheets)
+	);
+	const [question1, question2] = [
 		{
 			name: 'topicChoice',
 			message: 'How would you class this note?',
 			type: 'list',
-			choices: [...topicsList, 'None of the above']
+			choices: [...currTopics, 'None of the above']
 		},
 		{ name: 'newTopic', message: 'Name your new topic...', type: 'input' }
 	];
 
-	let { topicChoice } = await inquirer.prompt(topicsQuestions[0]);
+	let { topicChoice } = await inquirer.prompt(question1);
 	let formattedTopicName;
 
 	if (topicChoice === 'None of the above') {
-		const { newTopic } = await inquirer.prompt(topicsQuestions[1]);
+		const { newTopic } = await inquirer.prompt(question2);
 		if (newTopic === '') {
 			throw new Error('---- PLEASE GIVE VALID TOPIC NAME ----');
 		} else {
 			formattedTopicName = newTopic.replace(' ', '-');
-			if (topicsList.includes(formattedTopicName)) {
+			if (currTopics.includes(formattedTopicName)) {
 				throw new Error(
 					'--- Topic already exists - please select it from the options ---'
 				);
@@ -39,37 +42,36 @@ async function queryTopic() {
 }
 
 async function queryTech(topicChoice) {
-	const techList = await fs.readdir(`${pathToCheatSheets}/${topicChoice}`);
-	const formattedTechList = techList.map((tech) =>
+	const techFileNames = await fs.readdir(`${pathToCheatSheets}/${topicChoice}`);
+	const currTechs = techFileNames.map((tech) =>
 		tech.substring(0, tech.length - 5)
 	);
-
 	const [question1, question2] = [
 		{
 			name: 'techChoice',
 			type: 'list',
 			message: 'Which tech would you like to add a note for?',
-			choices: [...formattedTechList, 'None of the above']
+			choices: [...currTechs, 'None of the above']
 		},
 		{ name: 'newTech', message: 'Name your new tech...', type: 'input' }
 	];
 
 	let { techChoice } = await inquirer.prompt(question1);
-	let kebabCaseTech;
+	let formattedTechChoice;
 
 	if (techChoice === 'None of the above') {
 		const { newTech } = await inquirer.prompt(question2);
 		if (newTech === '') {
 			throw new Error('---- PLEASE GIVE VALID TECH NAME ----');
 		} else {
-			kebabCaseTech = newTech.replace(/ /g, '-');
-			if (formattedTechList.includes(kebabCaseTech)) {
+			formattedTechChoice = newTech.replace(/ /g, '-');
+			if (currTechs.includes(formattedTechChoice)) {
 				throw new Error(
 					'--- Tech already exists - please select it from the options ---'
 				);
 			}
 			await fs.writeFile(
-				`${pathToCheatSheets}/${topicChoice}/${kebabCaseTech}.json`,
+				`${pathToCheatSheets}/${topicChoice}/${formattedTechChoice}.json`,
 				'{}'
 			);
 		}
@@ -77,21 +79,10 @@ async function queryTech(topicChoice) {
 		techChoice = newTech;
 	}
 
-	return kebabCaseTech || techChoice;
+	return formattedTechChoice || techChoice;
 }
 
 async function collectNoteData(topicChoice, techChoice) {
-	let raw;
-
-	try {
-		raw = await fs.readFile(
-			`${pathToCheatSheets}/${topicChoice}/${techChoice}`,
-			'utf-8'
-		);
-	} catch (error) {
-		raw = null;
-	}
-
 	const questions = [
 		{
 			type: 'input',
@@ -100,18 +91,30 @@ async function collectNoteData(topicChoice, techChoice) {
 		},
 		{ type: 'input', name: 'body', message: 'Please type your note...' }
 	];
+	let rawTechNotes;
 
-	const { title, body } = await inquirer.prompt(questions);
-
-	const newNotes = { ...JSON.parse(raw) } || {};
-
-	if (checkIfNoteExists(title, newNotes)) {
-		throw new Error('Title already exists - please choose another');
-	} else {
-		newNotes[title] = body;
+	try {
+		rawTechNotes = await fs.readFile(
+			path.resolve(
+				__dirname,
+				`${pathToCheatSheets}/${topicChoice}/${techChoice}.json`
+			),
+			'utf-8'
+		);
+	} catch (error) {
+		console.log('error reading file - collectNoteData:', { error });
+		rawTechNotes = null;
 	}
 
-	return newNotes;
+	const { title, body } = await inquirer.prompt(questions);
+	const newTechNotes = { ...JSON.parse(rawTechNotes) } || {};
+
+	if (checkIfNoteExists(title, newTechNotes)) {
+		throw new Error('Title already exists - please choose another');
+	} else {
+		newTechNotes[title] = body;
+	}
+	return newTechNotes;
 }
 
 function checkIfNoteExists(title, currNotes) {
