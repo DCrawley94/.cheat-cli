@@ -1,0 +1,20 @@
+{
+	"env": {
+		"browser": true,
+		"commonjs": true,
+		"es2021": true
+	},
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": "latest"
+	},
+	"rules": {
+		"indent": ["warn", "tab", 3],
+		"linebreak-style": ["warn", "unix"],
+		"quotes": ["warn", "single"],
+		"semi": ["warn", "always"],
+		"no-undef": "error",
+		"no-unused-vars": "warn",
+		"no-unused-expressions": "warn"
+	}
+}

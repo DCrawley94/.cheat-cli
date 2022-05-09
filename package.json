@@ -1,0 +1,29 @@
+{
+	"name": "cheat-cli",
+	"version": "1.0.0",
+	"description": "Command Line Cheatsheet Tool",
+	"main": "index.js",
+	"scripts": {
+		"test": "jest",
+		"setup": "cheat-cli/app/bin/setup.sh",
+		"cheat": "node cheat-cli.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"eslint": "^8.14.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-plugin-import": "^2.26.0",
+		"jest": "^28.0.3"
+	},
+	"dependencies": {
+		"dotenv": "^16.0.0",
+		"inquirer": "^8.2.4"
+	},
+	"jest": {
+		"setupFiles": [
+			"dotenv/config"
+		]
+	}
+}
