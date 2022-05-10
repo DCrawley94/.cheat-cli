@@ -16,6 +16,5 @@ inquirer
 		if (action === 'Add note') addNote();
 	})
 	.catch((err) => {
-		console.error(err);
-		throw new Error('How did you fuck this up?');
+		throw new Error("Couldn't start cheat-cli")
 	});
