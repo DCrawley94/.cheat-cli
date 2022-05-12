@@ -8,40 +8,11 @@ A command line tool that you can use to create your own local cheatsheets.
 
 **Please follow these steps to setup setup the Cheat-CLI on your machine:**
 
-First fork the project then clone the repo into your HOME directory, then change directory into `.cheat-cli` and continue with the next steps
-
-### **Cheatsheet Setup Command**
+First fork the project then clone the repo into your HOME directory, then change directory into `.cheat-cli` and run the following command:
 
 ```sh
 npm run setup
 ```
-
-### **Config setup**
-
-If you go to the `config.js` file in the root of `.cheat-cli` it should look something like this. Replace the capitalized string with the <ins>absolute path</ins> _**from your home directory**_ to the relevant file/directory.
-
-- **pathToCheatSheets:** The `cheatsheets` directory can be found in the root directory of `~/.cheat-cli`
-- **pathToReset:** Only needed if you plan to run the tests - can be found in the `scripts` directory within `__tests__`
-
-```js
-const path = require('path');
-
-module.exports = {
-	pathToCheatSheets:
-		process.env.NODE_ENV === 'test'
-			? '__tests__/cheatsheets'
-			: path.resolve(
-					process.cwd(),
-					'__ABSOLUTE_PATH_TO_YOUR_CHEATSHEETS_DIRECTORY__'
-			  ),
-	pathToReset: path.resolve(
-		process.cwd(),
-		'__ABSOLUTE_PATH_TO_THE_TEST_RESET_SCRIPT__'
-	)
-};
-```
-
-This file is `.gitignore`'d so won't be pushed to GitHub
 
 ---
 
