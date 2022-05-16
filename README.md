@@ -18,8 +18,41 @@ npm run setup
 
 ## Usage
 
-The cheatsheets are designed to be divided into **topics** (e.g. backend) and techs (e.g. express) and can be found in the cheatsheets directory. I have included a couple of topics to get you started but you are able to add as many as you like!
+Once the setup is complete you will have access to the `cheat` command globally on your machine.
 
-Use the command `npm run cheat` to add notes to a cheatsheet of your choice.
+---
 
-\* I will make it so you can use the `cheat` command globallybut currently I'm working on a way to browse your notes and edit/delete them.
+When you run the cheat command you will be given a choice on what you want to do as seen here:
+
+![cheatsheet tool main menu](images/main.png 'Cheatsheet tool main menu')
+
+### **Adding a Note**
+
+When adding a note you are able to choose from the current topics and techs or create new ones by choosing the **None of the above** option.
+
+Finally you are asked to provide both a tile and a body for the note.
+
+See below for an example:
+
+![adding a note](images/add-note.png 'adding a note with the cheatsheet tool')
+
+### **Browsing Notes**
+
+When you choose to browse your notes you will be asked to choose both the topic and tech that you wish to browse.
+
+The notes will then all be printed to your terminal as shown below:
+
+![browsing notes](images/browse-notes.png 'browsing notes with the cheatsheet tool')
+
+### **Backup Notes**
+
+Finally, something I recommend doing regularly, you have the option to backup your notes. Just in case something goes wrong!
+
+![backup notes](images/backup.png 'backing up notes with the cheatsheet tool')
+
+---
+
+## Features to be added:
+
+- Basic search functionality
+- Add flags such as `-b` (for browse) or `-a` (for add) to the command
