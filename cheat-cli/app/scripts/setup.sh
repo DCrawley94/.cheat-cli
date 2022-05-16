@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-npm install
+npm install -g
 
 mkdir "cheatsheets" &>/dev/null || echo "Cheatsheets directory already exists"
 

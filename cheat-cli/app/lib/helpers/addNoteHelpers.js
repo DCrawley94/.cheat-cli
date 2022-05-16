@@ -109,6 +109,10 @@ async function collectNoteData(topicChoice, techChoice) {
 	const { title, body } = await inquirer.prompt(questions);
 	const newTechNotes = { ...JSON.parse(rawTechNotes) } || {};
 
+	if (!title.length || !body.length) {
+		throw new Error('---- PLEASE GIVE VALID TITLE AND BODY ----');
+	}
+
 	if (checkIfNoteExists(title, newTechNotes)) {
 		throw new Error('Title already exists - please choose another');
 	} else {
