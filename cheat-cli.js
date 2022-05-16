@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const inquirer = require('inquirer');
 const { addNote, backupNotes, browseNotes } = require('./cheat-cli/app');
 

@@ -2,7 +2,10 @@
 	"name": "cheat-cli",
 	"version": "1.0.0",
 	"description": "Command Line Cheatsheet Tool",
-	"main": "index.js",
+	"main": "cheat-cli.js",
+	"bin": {
+		"cheat": "cheat-cli.js"
+	},
 	"scripts": {
 		"test": "jest",
 		"setup": "cheat-cli/app/scripts/setup.sh",
