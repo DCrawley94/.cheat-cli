@@ -10,7 +10,7 @@ async function queryTopic() {
 	const [question1, question2] = [
 		{
 			name: 'topicChoice',
-			message: 'How would you class this note?',
+			message: 'What is the topic of this note?',
 			type: 'list',
 			choices: [...currTopics, 'None of the above']
 		},
@@ -89,7 +89,11 @@ async function collectNoteData(topicChoice, techChoice) {
 			name: 'title',
 			message: 'What is the title of your note?'
 		},
-		{ type: 'input', name: 'body', message: 'Please type your note...' }
+		{
+			type: 'input',
+			name: 'body',
+			message: 'Please type the body of your note...'
+		}
 	];
 	let rawTechNotes;
 
