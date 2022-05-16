@@ -14,4 +14,4 @@ backupDir="$HOME/.cheat-cli/cheatsheet-backup"
 
 # --- SCRIPT ---
 
-rsync -av "$pathToCheatSheets" "$backupDir" &>/dev/null && echo -e "Successfully backed up notes to $GREEN_BOLD$backupDir$NORMAL 🤟"
+rsync -av "$pathToCheatSheets" "$backupDir" &>/dev/null && echo -e "Successfully backed up notes 🤟. Find them here: $GREEN_BOLD$backupDir$NORMAL "

@@ -10,6 +10,10 @@ module.exports = {
 			  ),
 	pathToReset: path.resolve(
 		process.cwd(),
-		`${process.env.HOME}/cheat-cli/__tests__/scripts/reset-cheatsheets.sh`
+		`${process.env.HOME}/.cheat-cli/cheat-cli/__tests__/scripts/reset-cheatsheets.sh`
+	),
+	pathToBackUp: path.resolve(
+		process.cwd(),
+		`${process.env.HOME}/.cheat-cli/cheat-cli/app/scripts/backup.sh`
 	)
 };
