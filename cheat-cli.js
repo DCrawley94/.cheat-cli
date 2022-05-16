@@ -1,12 +1,12 @@
 const inquirer = require('inquirer');
-const { addNote, backupNotes } = require('./cheat-cli/app');
+const { addNote, backupNotes, browseNotes } = require('./cheat-cli/app');
 
 const questions = [
 	{
 		type: 'list',
 		name: 'action',
 		message: 'What would you like to do?',
-		choices: ['Add note', 'Find notes', 'Backup notes']
+		choices: ['Add note', 'Browse notes', 'Backup notes']
 	}
 ];
 
@@ -19,6 +19,9 @@ inquirer
 				break;
 			case 'Backup notes':
 				backupNotes();
+				break;
+			case 'Browse notes':
+				browseNotes();
 				break;
 			default:
 				break;
