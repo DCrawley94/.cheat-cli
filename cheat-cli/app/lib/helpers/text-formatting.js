@@ -6,6 +6,6 @@ exports.capitalise = (str) => {
 
 exports.terminalStyles = {
 	lightBlueBold: '\n\x1b[36m\x1b[1m',
-	darkBlue: '\n\x1b[34m',
+	darkBlueBold: '\n\x1b[34m\x1b[1m',
 	reset: '\x1b[0m'
 };

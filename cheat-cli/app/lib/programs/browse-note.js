@@ -38,7 +38,7 @@ async function browseNotes() {
 
 	console.log(`${terminalStyles.lightBlueBold}--- ${capitalise(techName)} ---`);
 	for (const title in notes) {
-		console.log(`${terminalStyles.darkBlue}  ${title}`);
+		console.log(`${terminalStyles.darkBlueBold}  ${title}`);
 		console.log(`   ${terminalStyles.reset} ~ ${notes[title]}\n`);
 	}
 }
