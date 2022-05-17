@@ -1,9 +1,27 @@
 #!/usr/bin/env bash
 
-npm install -g
+# --- INSTALL SCRIPT FOR CHEATSHEET TOOL
+# Purpose:
+# - install necessary dependancies
+# - install comman globally
+# - create cheatsheets directory and add starter topics
 
-mkdir "cheatsheets" &>/dev/null || echo "Cheatsheets directory already exists"
+# --- COLOURS/STYLES
 
-mkdir "cheatsheets/frontend" "cheatsheets/backend" &>/dev/null || echo "Cheatsheet files already exist"
+BOLD=$(tput bold)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+RESET=$(tput sgr0)
 
-echo "Setup Complete... hopefully 🤔"
+# --- SCRIPT
+
+echo -e "\n$BOLD\0Please enter super-user password...$RESET"
+sudo npm install &>/dev/null && echo -e "\nPassword accepted - cheatsheet dependancies installed"
+
+sudo npm install -g &>/dev/null && echo -e "\nCommand installed globally 🎉"
+
+mkdir "cheatsheets" &>/dev/null || echo -e "\n$YELLOW\0Cheatsheets directory already exists"
+
+mkdir "cheatsheets/frontend" "cheatsheets/backend" &>/dev/null || echo -e "\n$YELLOW\0Cheatsheet files already exists$RESET"
+
+echo -e "\n$BOLD$GREEN\0Setup Complete... hopefully 🤔$RESET"
