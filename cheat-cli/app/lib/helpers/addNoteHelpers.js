@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 const inquirer = require('inquirer');
 const path = require('path');
 const { pathToCheatSheets } = require('../../../../config');
+const { removeFileExtension } = require('./text-formatting');
 
 async function queryTopic() {
 	const currTopics = await fs.readdir(
@@ -43,9 +44,7 @@ async function queryTopic() {
 
 async function queryTech(topicChoice) {
 	const techFileNames = await fs.readdir(`${pathToCheatSheets}/${topicChoice}`);
-	const currTechs = techFileNames.map((tech) =>
-		tech.substring(0, tech.length - 5)
-	);
+	const currTechs = techFileNames.map((tech) => removeFileExtension(tech));
 	const [question1, question2] = [
 		{
 			name: 'techChoice',

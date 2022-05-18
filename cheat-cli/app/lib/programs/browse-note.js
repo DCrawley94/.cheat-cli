@@ -1,9 +1,8 @@
 const inquirer = require('inquirer');
-const path = require('path');
 const fs = require('fs/promises');
 
 const { pathToCheatSheets } = require('../../../../config');
-const { capitalise, terminalStyles } = require('../helpers/text-formatting');
+const { printNotes } = require('../helpers/text-formatting');
 
 async function browseNotes() {
 	const currTopics = await fs.readdir(pathToCheatSheets);
@@ -34,13 +33,7 @@ async function browseNotes() {
 		)
 	);
 
-	const techName = techChoice.slice(0, techChoice.length - 5);
-
-	console.log(`${terminalStyles.lightBlueBold}--- ${capitalise(techName)} ---`);
-	for (const title in notes) {
-		console.log(`${terminalStyles.darkBlueBold}  ${title}`);
-		console.log(`   ${terminalStyles.reset} ~ ${notes[title]}\n`);
-	}
+	printNotes(notes, techChoice);
 }
 
 module.exports = browseNotes;
