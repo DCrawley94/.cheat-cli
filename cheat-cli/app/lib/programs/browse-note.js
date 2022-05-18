@@ -1,5 +1,5 @@
-const inquirer = require('inquirer');
 const fs = require('fs/promises');
+const askUser = require('../helpers/askUser');
 
 const { pathToCheatSheets } = require('../../../../config');
 const { printNotes } = require('../helpers/text-formatting');
@@ -14,7 +14,7 @@ async function browseNotes() {
 		choices: [...currTopics]
 	};
 
-	const { topicChoice } = await inquirer.prompt(question1);
+	const { topicChoice } = await askUser(question1);
 	const techFileNames = await fs.readdir(`${pathToCheatSheets}/${topicChoice}`);
 
 	const question2 = {
@@ -24,7 +24,7 @@ async function browseNotes() {
 		choices: [...techFileNames]
 	};
 
-	const { techChoice } = await inquirer.prompt(question2);
+	const { techChoice } = await askUser(question2);
 
 	const notes = JSON.parse(
 		await fs.readFile(
