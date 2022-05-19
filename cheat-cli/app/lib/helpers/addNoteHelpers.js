@@ -2,7 +2,11 @@ const fs = require('fs/promises');
 const path = require('path');
 const { pathToCheatSheets } = require('../../../../config');
 const askUser = require('./askUser');
-const { removeFileExtension, printErrorMessage } = require('./text-formatting');
+const {
+	removeFileExtension,
+	printErrorMessage,
+	kebabCase
+} = require('./text-formatting');
 
 async function queryTopic() {
 	const currTopics = await fs.readdir(
@@ -19,7 +23,6 @@ async function queryTopic() {
 	];
 
 	let { topicChoice } = await askUser(question1);
-	//askUser([question1, question2]);
 	let formattedTopicName;
 
 	if (topicChoice === 'None of the above') {
@@ -29,7 +32,7 @@ async function queryTopic() {
 			'Please Supply Topic Name'
 		);
 
-		const formattedTopicName = newTopic.replace(' ', '-');
+		formattedTopicName = kebabCase(newTopic);
 
 		if (currTopics.includes(formattedTopicName)) {
 			printErrorMessage(
@@ -69,7 +72,7 @@ async function queryTech(topicChoice) {
 			'Please give valid tech name'
 		);
 
-		formattedTechChoice = newTech.replace(/ /g, '-');
+		formattedTechChoice = kebabCase(newTech);
 
 		if (currTechs.includes(formattedTechChoice)) {
 			printErrorMessage(
@@ -119,16 +122,16 @@ async function collectNoteData(topicChoice, techChoice) {
 	const { title, body } = await askUser(
 		questions,
 		[''],
-		'Title and body must conatin at least 1 character'
+		'Title and body must contain at least 1 character'
 	);
 	const newTechNotes = { ...JSON.parse(rawTechNotes) } || {};
-
 	if (checkIfNoteExists(title, newTechNotes)) {
 		printErrorMessage('Title already exists - please select from the list');
 		return collectNoteData(topicChoice, techChoice);
 	} else {
 		newTechNotes[title] = body;
 	}
+
 	return newTechNotes;
 }
 

@@ -3,7 +3,7 @@
 const terminalStyles = {
 	lightBlueBold: '\n\x1b[36m\x1b[1m',
 	darkBlueBold: '\n\x1b[34m\x1b[1m',
-	yellowBold: '\033[1;33m',
+	yellowBold: '\\033[1;33m',
 	reset: '\x1b[0m'
 };
 
@@ -24,6 +24,12 @@ function formatFileName(fileName) {
 	return capitalise(fileName);
 }
 
+// Test this
+function kebabCase(string) {
+	const lowercased = string.toLowerCase();
+	return lowercased.replaceAll(' ', '-');
+}
+
 // PRINTING NOTES
 
 function printNotes(notes, techName) {
@@ -42,4 +48,9 @@ function printErrorMessage(message) {
 	);
 }
 
-module.exports = { printNotes, printErrorMessage, removeFileExtension };
+module.exports = {
+	printNotes,
+	printErrorMessage,
+	removeFileExtension,
+	kebabCase
+};
