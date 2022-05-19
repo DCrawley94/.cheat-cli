@@ -1,9 +1,8 @@
-const inquirer = require('inquirer');
-const path = require('path');
 const fs = require('fs/promises');
+const askUser = require('../helpers/askUser');
 
 const { pathToCheatSheets } = require('../../../../config');
-const { capitalise, terminalStyles } = require('../helpers/text-formatting');
+const { printNotes } = require('../helpers/text-formatting');
 
 async function browseNotes() {
 	const currTopics = await fs.readdir(pathToCheatSheets);
@@ -15,7 +14,7 @@ async function browseNotes() {
 		choices: [...currTopics]
 	};
 
-	const { topicChoice } = await inquirer.prompt(question1);
+	const { topicChoice } = await askUser(question1);
 	const techFileNames = await fs.readdir(`${pathToCheatSheets}/${topicChoice}`);
 
 	const question2 = {
@@ -25,7 +24,7 @@ async function browseNotes() {
 		choices: [...techFileNames]
 	};
 
-	const { techChoice } = await inquirer.prompt(question2);
+	const { techChoice } = await askUser(question2);
 
 	const notes = JSON.parse(
 		await fs.readFile(
@@ -34,13 +33,7 @@ async function browseNotes() {
 		)
 	);
 
-	const techName = techChoice.slice(0, techChoice.length - 5);
-
-	console.log(`${terminalStyles.lightBlueBold}--- ${capitalise(techName)} ---`);
-	for (const title in notes) {
-		console.log(`${terminalStyles.darkBlueBold}  ${title}`);
-		console.log(`   ${terminalStyles.reset} ~ ${notes[title]}\n`);
-	}
+	printNotes(notes, techChoice);
 }
 
 module.exports = browseNotes;

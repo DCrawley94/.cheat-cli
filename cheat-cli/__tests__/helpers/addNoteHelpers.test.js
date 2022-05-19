@@ -14,6 +14,8 @@ const {
 jest.mock('inquirer');
 jest.mock('fs/promises');
 
+const consoleSpy = jest.spyOn(global.console, 'log');
+
 describe('queryTopic()', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -34,12 +36,14 @@ describe('queryTopic()', () => {
 
 		await queryTopic();
 
-		expect(inquirer.prompt).toHaveBeenCalledWith({
-			name: 'topicChoice',
-			message: 'How would you class this note?',
-			type: 'list',
-			choices: ['backend', 'frontend', 'None of the above']
-		});
+		expect(inquirer.prompt).toHaveBeenCalledWith([
+			{
+				name: 'topicChoice',
+				message: 'What is the topic of this note?',
+				type: 'list',
+				choices: ['backend', 'frontend', 'None of the above']
+			}
+		]);
 	});
 
 	it('should invoke inquirer.prompt with correctly formed question - readdir returns empty array', async () => {
@@ -48,12 +52,14 @@ describe('queryTopic()', () => {
 
 		await queryTopic();
 
-		expect(inquirer.prompt).toHaveBeenCalledWith({
-			name: 'topicChoice',
-			message: 'How would you class this note?',
-			type: 'list',
-			choices: ['None of the above']
-		});
+		expect(inquirer.prompt).toHaveBeenCalledWith([
+			{
+				name: 'topicChoice',
+				message: 'What is the topic of this note?',
+				type: 'list',
+				choices: ['None of the above']
+			}
+		]);
 	});
 
 	it('should invoke fs.readdir', async () => {
@@ -86,17 +92,21 @@ describe('queryTopic()', () => {
 		await queryTopic();
 
 		expect(inquirer.prompt).toHaveBeenCalledTimes(2);
-		expect(inquirer.prompt).toHaveBeenCalledWith({
-			name: 'topicChoice',
-			message: 'How would you class this note?',
-			type: 'list',
-			choices: ['backend', 'frontend', 'None of the above']
-		});
-		expect(inquirer.prompt).toHaveBeenCalledWith({
-			name: 'newTopic',
-			message: 'Name your new topic...',
-			type: 'input'
-		});
+		expect(inquirer.prompt).toHaveBeenCalledWith([
+			{
+				name: 'topicChoice',
+				message: 'What is the topic of this note?',
+				type: 'list',
+				choices: ['backend', 'frontend', 'None of the above']
+			}
+		]);
+		expect(inquirer.prompt).toHaveBeenCalledWith([
+			{
+				name: 'newTopic',
+				message: 'Name your new topic...',
+				type: 'input'
+			}
+		]);
 	});
 
 	it('should return user created topic in kebab-case', async () => {
@@ -106,25 +116,34 @@ describe('queryTopic()', () => {
 
 		const output = await queryTopic();
 
-		expect(output).toBe('New-topic');
+		expect(output).toBe('new-topic');
 	});
 
 	it('should throw an error when user tries to create a topic that is an empty string', async () => {
 		inquirer.prompt
 			.mockReturnValueOnce({ topicChoice: 'None of the above' })
-			.mockReturnValueOnce({ newTopic: '' });
+			.mockReturnValueOnce({ newTopic: '' })
+			.mockReturnValueOnce({ newTopic: 'new topic' });
 
-		await expect(queryTopic()).rejects.toThrow(
-			'---- PLEASE GIVE VALID TOPIC NAME ----'
+		await queryTopic();
+
+		expect(consoleSpy).toHaveBeenCalledWith(
+			expect.stringMatching(/.*Please Supply Topic Name.*/)
 		);
 	});
+
 	it('should throw an error when user tries to recreate a topic that already exists', async () => {
 		inquirer.prompt
 			.mockReturnValueOnce({ topicChoice: 'None of the above' })
-			.mockReturnValueOnce({ newTopic: 'backend' });
+			.mockReturnValueOnce({ newTopic: 'backend' })
+			.mockReturnValueOnce({ topicChoice: 'new topic' });
 
-		await expect(queryTopic()).rejects.toThrow(
-			'--- Topic already exists - please select it from the options ---'
+		await queryTopic();
+
+		expect(consoleSpy).toHaveBeenCalledWith(
+			expect.stringMatching(
+				/.*Topic already exists - please select it from the options.*/
+			)
 		);
 	});
 });
@@ -158,12 +177,14 @@ describe('queryTech()', () => {
 
 		await queryTech('frontend');
 
-		expect(inquirer.prompt).toHaveBeenCalledWith({
-			name: 'techChoice',
-			type: 'list',
-			message: 'Which tech would you like to add a note for?',
-			choices: ['react', 'None of the above']
-		});
+		expect(inquirer.prompt).toHaveBeenCalledWith([
+			{
+				name: 'techChoice',
+				type: 'list',
+				message: 'Which tech would you like to add a note for?',
+				choices: ['react', 'None of the above']
+			}
+		]);
 	});
 
 	it('should invoke inquirer.prompt with properly formed question - readdir returns empty array', async () => {
@@ -174,12 +195,14 @@ describe('queryTech()', () => {
 
 		await queryTech('frontend');
 
-		expect(inquirer.prompt).toHaveBeenCalledWith({
-			name: 'techChoice',
-			type: 'list',
-			message: 'Which tech would you like to add a note for?',
-			choices: ['None of the above']
-		});
+		expect(inquirer.prompt).toHaveBeenCalledWith([
+			{
+				name: 'techChoice',
+				type: 'list',
+				message: 'Which tech would you like to add a note for?',
+				choices: ['None of the above']
+			}
+		]);
 	});
 
 	it('should return tech selected by user - single invocation of inquirer.prompt', async () => {
@@ -202,46 +225,58 @@ describe('queryTech()', () => {
 
 		expect(inquirer.prompt).toHaveBeenCalledTimes(2);
 
-		expect(inquirer.prompt).toHaveBeenNthCalledWith(1, {
-			name: 'techChoice',
-			type: 'list',
-			message: 'Which tech would you like to add a note for?',
-			choices: ['react', 'None of the above']
-		});
-		expect(inquirer.prompt).toHaveBeenNthCalledWith(2, {
-			name: 'newTech',
-			message: 'Name your new tech...',
-			type: 'input'
-		});
+		expect(inquirer.prompt).toHaveBeenNthCalledWith(1, [
+			{
+				name: 'techChoice',
+				type: 'list',
+				message: 'Which tech would you like to add a note for?',
+				choices: ['react', 'None of the above']
+			}
+		]);
+		expect(inquirer.prompt).toHaveBeenNthCalledWith(2, [
+			{
+				name: 'newTech',
+				message: 'Name your new tech...',
+				type: 'input'
+			}
+		]);
 	});
 
 	it('should return user created tech in kebab-case', async () => {
 		inquirer.prompt
 			.mockReturnValueOnce({ techChoice: 'None of the above' })
-			.mockReturnValueOnce({ newTech: 'cool frontend stuff' });
+			.mockReturnValueOnce({ newTech: 'cOol Frontend st7ff' });
 
 		const tech = await queryTech();
 
-		expect(tech).toBe('cool-frontend-stuff');
+		expect(tech).toBe('cool-frontend-st7ff');
 	});
 
 	it('should throw an error if user tried to create a tech that is an empty string', async () => {
 		inquirer.prompt
 			.mockReturnValueOnce({ techChoice: 'None of the above' })
-			.mockReturnValueOnce({ newTech: '' });
+			.mockReturnValueOnce({ newTech: '' })
+			.mockReturnValueOnce({ newTech: 'new tech' });
 
-		await expect(queryTech()).rejects.toThrow(
-			'---- PLEASE GIVE VALID TECH NAME ----'
+		await queryTech();
+
+		expect(consoleSpy).toHaveBeenCalledWith(
+			expect.stringMatching(/.*Please give valid tech name.*/)
 		);
 	});
 
 	it('should throw an error when user tries to recreate a tech that already exists', async () => {
 		inquirer.prompt
 			.mockReturnValueOnce({ techChoice: 'None of the above' })
-			.mockReturnValueOnce({ newTech: 'react' });
+			.mockReturnValueOnce({ newTech: 'react' })
+			.mockReturnValueOnce({ newTech: 'not react' });
 
-		await expect(queryTech()).rejects.toThrow(
-			'--- Tech already exists - please select it from the options ---'
+		await queryTech();
+
+		expect(consoleSpy).toHaveBeenCalledWith(
+			expect.stringMatching(
+				/.*Tech already exists - please select it from the options.*/
+			)
 		);
 	});
 });
@@ -254,12 +289,12 @@ describe('collectNoteData()', () => {
 			JSON.stringify({ grid: 'yes', flex: 'maybe' })
 		);
 
-		inquirer.prompt.mockReturnValueOnce({ title: 'vanilla', body: 'hmmm' });
-
 		execFileSync(pathToReset);
 	});
 
 	it('should return an object with correct keys and values', async () => {
+		inquirer.prompt.mockReturnValueOnce({ title: 'vanilla', body: 'hmmm' });
+
 		const expKeys = ['grid', 'flex', 'vanilla'];
 		const expValues = ['yes', 'maybe', 'hmmm'];
 
@@ -273,6 +308,8 @@ describe('collectNoteData()', () => {
 	});
 
 	it('should invoke fs.readFile', async () => {
+		inquirer.prompt.mockReturnValueOnce({ title: 'vanilla', body: 'hmmm' });
+
 		await collectNoteData('frontend', 'css');
 
 		expect(fs.readFile).toHaveBeenCalledTimes(1);
@@ -289,6 +326,8 @@ describe('collectNoteData()', () => {
 	test.todo('should invoke fs.readFile with correctly formed arguments');
 
 	it('should invoke inquirer.prompt with correctly formed questions', async () => {
+		inquirer.prompt.mockReturnValueOnce({ title: 'vanilla', body: 'hmmm' });
+
 		await collectNoteData('frontend', 'css');
 
 		expect(inquirer.prompt).toHaveBeenCalledTimes(1);
@@ -298,20 +337,43 @@ describe('collectNoteData()', () => {
 				name: 'title',
 				message: 'What is the title of your note?'
 			},
-			{ type: 'input', name: 'body', message: 'Please type your note...' }
+			{
+				type: 'input',
+				name: 'body',
+				message: 'Please type the body of your note...'
+			}
 		]);
 	});
 
 	it('should throw an error if chosen title already exists', async () => {
-		jest.resetAllMocks();
-		fs.readFile.mockResolvedValue(
-			JSON.stringify({ grid: 'yes', flex: 'maybe' })
-		);
-		inquirer.prompt.mockReturnValueOnce({ title: 'grid', body: 'hmmm' });
+		inquirer.prompt
+			.mockReturnValueOnce({ title: 'grid', body: 'hmmm' })
+			.mockReturnValueOnce({ title: 'not grid', body: 'hmmm' });
 
-		await expect(collectNoteData('frontend', 'css')).rejects.toThrow(
-			'Title already exists - please choose another'
+		await collectNoteData('frontend', 'react');
+
+		expect(consoleSpy).toHaveBeenCalledWith(
+			expect.stringMatching(
+				/.*Title already exists - please select from the list.*/
+			)
 		);
+	});
+
+	it('should throw an error is title or body are invalid', async () => {
+		inquirer.prompt
+			.mockReturnValueOnce({ title: '', body: 'hmmm' })
+			.mockReturnValueOnce({ title: 'not grid', body: '' })
+			.mockReturnValueOnce({ title: '', body: '' })
+			.mockReturnValueOnce({ title: 'not grid', body: 'body goes ere' });
+
+		await collectNoteData();
+
+		expect(consoleSpy).toHaveBeenCalledWith(
+			expect.stringMatching(
+				/.*Title and body must contain at least 1 character.*/
+			)
+		);
+		expect(consoleSpy).toHaveBeenCalledTimes(3);
 	});
 });
 

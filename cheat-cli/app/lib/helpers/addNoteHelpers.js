@@ -1,7 +1,12 @@
 const fs = require('fs/promises');
-const inquirer = require('inquirer');
 const path = require('path');
 const { pathToCheatSheets } = require('../../../../config');
+const askUser = require('./askUser');
+const {
+	removeFileExtension,
+	printErrorMessage,
+	kebabCase
+} = require('./text-formatting');
 
 async function queryTopic() {
 	const currTopics = await fs.readdir(
@@ -17,22 +22,25 @@ async function queryTopic() {
 		{ name: 'newTopic', message: 'Name your new topic...', type: 'input' }
 	];
 
-	let { topicChoice } = await inquirer.prompt(question1);
+	let { topicChoice } = await askUser(question1);
 	let formattedTopicName;
 
 	if (topicChoice === 'None of the above') {
-		const { newTopic } = await inquirer.prompt(question2);
-		if (newTopic === '') {
-			throw new Error('---- PLEASE GIVE VALID TOPIC NAME ----');
+		const { newTopic } = await askUser(
+			question2,
+			[''],
+			'Please Supply Topic Name'
+		);
+
+		formattedTopicName = kebabCase(newTopic);
+
+		if (currTopics.includes(formattedTopicName)) {
+			printErrorMessage(
+				'Topic already exists - please select it from the options'
+			);
+			return queryTopic();
 		} else {
-			formattedTopicName = newTopic.replace(' ', '-');
-			if (currTopics.includes(formattedTopicName)) {
-				throw new Error(
-					'--- Topic already exists - please select it from the options ---'
-				);
-			} else {
-				await fs.mkdir(`${pathToCheatSheets}/${formattedTopicName}`);
-			}
+			await fs.mkdir(`${pathToCheatSheets}/${formattedTopicName}`);
 		}
 
 		topicChoice = newTopic;
@@ -43,9 +51,7 @@ async function queryTopic() {
 
 async function queryTech(topicChoice) {
 	const techFileNames = await fs.readdir(`${pathToCheatSheets}/${topicChoice}`);
-	const currTechs = techFileNames.map((tech) =>
-		tech.substring(0, tech.length - 5)
-	);
+	const currTechs = techFileNames.map((tech) => removeFileExtension(tech));
 	const [question1, question2] = [
 		{
 			name: 'techChoice',
@@ -56,20 +62,24 @@ async function queryTech(topicChoice) {
 		{ name: 'newTech', message: 'Name your new tech...', type: 'input' }
 	];
 
-	let { techChoice } = await inquirer.prompt(question1);
+	let { techChoice } = await askUser(question1);
 	let formattedTechChoice;
 
 	if (techChoice === 'None of the above') {
-		const { newTech } = await inquirer.prompt(question2);
-		if (newTech === '') {
-			throw new Error('---- PLEASE GIVE VALID TECH NAME ----');
+		const { newTech } = await askUser(
+			question2,
+			[''],
+			'Please give valid tech name'
+		);
+
+		formattedTechChoice = kebabCase(newTech);
+
+		if (currTechs.includes(formattedTechChoice)) {
+			printErrorMessage(
+				'Tech already exists - please select it from the options'
+			);
+			return queryTech(topicChoice);
 		} else {
-			formattedTechChoice = newTech.replace(/ /g, '-');
-			if (currTechs.includes(formattedTechChoice)) {
-				throw new Error(
-					'--- Tech already exists - please select it from the options ---'
-				);
-			}
 			await fs.writeFile(
 				`${pathToCheatSheets}/${topicChoice}/${formattedTechChoice}.json`,
 				'{}'
@@ -106,22 +116,22 @@ async function collectNoteData(topicChoice, techChoice) {
 			'utf-8'
 		);
 	} catch (error) {
-		console.log('error reading file - collectNoteData:', { error });
 		rawTechNotes = null;
 	}
 
-	const { title, body } = await inquirer.prompt(questions);
+	const { title, body } = await askUser(
+		questions,
+		[''],
+		'Title and body must contain at least 1 character'
+	);
 	const newTechNotes = { ...JSON.parse(rawTechNotes) } || {};
-
-	if (!title.length || !body.length) {
-		throw new Error('---- PLEASE GIVE VALID TITLE AND BODY ----');
-	}
-
 	if (checkIfNoteExists(title, newTechNotes)) {
-		throw new Error('Title already exists - please choose another');
+		printErrorMessage('Title already exists - please select from the list');
+		return collectNoteData(topicChoice, techChoice);
 	} else {
 		newTechNotes[title] = body;
 	}
+
 	return newTechNotes;
 }
 
@@ -129,4 +139,10 @@ function checkIfNoteExists(title, currNotes) {
 	return currNotes[title] ? true : false;
 }
 
-module.exports = { queryTopic, queryTech, collectNoteData, checkIfNoteExists };
+module.exports = {
+	queryTopic,
+	queryTech,
+	collectNoteData,
+	askUser,
+	checkIfNoteExists
+};
