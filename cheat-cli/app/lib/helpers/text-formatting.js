@@ -3,7 +3,7 @@
 const terminalStyles = {
 	lightBlueBold: '\n\x1b[36m\x1b[1m',
 	darkBlueBold: '\n\x1b[34m\x1b[1m',
-	yellowBold: '\\033[1;33m',
+	yellowBold: '\x1b[1m\x1b[33m',
 	reset: '\x1b[0m'
 };
 
