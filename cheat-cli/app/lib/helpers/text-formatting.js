@@ -64,10 +64,10 @@ function printNotes(notes, techName) {
 	console.log(
 		`\n${terminalStyles.cyan}${terminalStyles.bright}--- ${formatFileName(
 			techName
-		)} ---`
+		)}${terminalStyles.reset} ---`
 	);
 	for (const title in notes) {
-		console.log(`\n${terminalStyles.blue}  ${title}`);
+		console.log(`\n${terminalStyles.blue}  ${title} ${terminalStyles.reset}`);
 		console.log(`   ${terminalStyles.reset} ~ ${notes[title]}\n`);
 	}
 }

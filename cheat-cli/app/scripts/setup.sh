@@ -20,7 +20,7 @@ sudo npm install &>/dev/null && echo -e "\nPassword accepted - cheatsheet depend
 
 sudo npm install -g &>/dev/null && echo -e "\nCommand installed globally 🎉"
 
-mkdir "cheatsheets" &>/dev/null || echo -e "\n$YELLOW\0Cheatsheets directory already exists"
+mkdir "cheatsheets" &>/dev/null || echo -e "\n$YELLOW\0Cheatsheets directory already exists$RESET"
 
 mkdir "cheatsheets/frontend" "cheatsheets/backend" &>/dev/null || echo -e "\n$YELLOW\0Cheatsheet files already exists$RESET"
 
