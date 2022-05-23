@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const askUser = require('../utils/askUser');
 const { pathToCheatSheets } = require('../../../../config');
-const { printNotes } = require('../utils/textFormatting');
+const { printNotes } = require('../utils/printMessage');
 
 async function browseNotes() {
 	const currTopics = await fs.readdir(pathToCheatSheets);

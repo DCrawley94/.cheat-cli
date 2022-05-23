@@ -12,7 +12,7 @@ const program = new Command();
 
 program
 	.option('-a, --add', 'add a note to your cheatsheets')
-	.option('-b, --browse', 'browse your existing cheatsheets')
+	.option('-br, --browse', 'browse your existing cheatsheets')
 	.option('-bk, --backup', 'backup your cheatsheet files')
 	.option('-s, --search', 'search for a particular cheatsheet');
 

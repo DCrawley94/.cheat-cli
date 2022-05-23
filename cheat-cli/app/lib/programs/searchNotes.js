@@ -3,6 +3,7 @@ const fs = require('fs/promises');
 const glob = require('glob');
 const inquirer = require('inquirer');
 const { printErrorMessage, printNotes } = require('../utils/printMessage');
+const { kebabCase } = require('../utils/textFormatting');
 
 async function searchNotes() {
 	const question = {
@@ -16,7 +17,7 @@ async function searchNotes() {
 	const isValidSearch = /.+/.test(searchTerm);
 	if (!isValidSearch) printErrorMessage('Not a Valid Search 😞');
 	else {
-		const searchPattern = `/*/${searchTerm}.json`;
+		const searchPattern = `/*/${kebabCase(searchTerm)}.json`;
 		const searchOptions = { root: pathToCheatSheets };
 
 		glob(searchPattern, searchOptions, async (err, matches) => {

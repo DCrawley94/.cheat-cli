@@ -1,7 +1,12 @@
 // TEXT FORMATTING
 
-function capitalise(str) {
-	return `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
+function capitaliseWords(str) {
+	return str
+		.split(' ')
+		.map((subStr) => {
+			return `${subStr.slice(0, 1).toUpperCase()}${subStr.slice(1)}`;
+		})
+		.join(' ');
 }
 
 function removeFileExtension(fileName) {
@@ -10,9 +15,9 @@ function removeFileExtension(fileName) {
 
 function formatFileName(fileName) {
 	if (fileName.endsWith('.json')) {
-		return capitalise(removeFileExtension(fileName));
+		return capitaliseWords(removeFileExtension(fileName));
 	}
-	return capitalise(fileName);
+	return capitaliseWords(fileName);
 }
 
 // Test this

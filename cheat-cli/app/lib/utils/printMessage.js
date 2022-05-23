@@ -39,9 +39,9 @@ function printNotes(notes, techName) {
 	);
 	for (const title in notes) {
 		process.stdout.write(
-			`\n${terminalStyles.blue}  ${title} ${terminalStyles.reset}`
+			`\n${terminalStyles.blue}${terminalStyles.bright}  ${title} ${terminalStyles.reset}`
 		);
-		process.stdout.write(`\n   ${terminalStyles.reset} ~ ${notes[title]}`);
+		process.stdout.write(`\n   ${terminalStyles.reset} ~ ${notes[title]}\n`);
 	}
 }
 
