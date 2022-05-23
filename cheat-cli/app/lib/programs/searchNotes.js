@@ -2,7 +2,7 @@ const { pathToCheatSheets } = require('../../../../config');
 const fs = require('fs/promises');
 const glob = require('glob');
 const inquirer = require('inquirer');
-const { printNotes, printErrorMessage } = require('../helpers/text-formatting');
+const { printErrorMessage, printNotes } = require('../utils/printMessage');
 
 async function searchNotes() {
 	const question = {
