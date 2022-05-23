@@ -47,7 +47,7 @@ function printNotes(notes, techName) {
 
 function printErrorMessage(message) {
 	process.stdout.write(
-		`\n - ${terminalStyles.yellow}${message}\n${terminalStyles.reset} - `
+		`\n - ${terminalStyles.yellow}${message}${terminalStyles.reset} -\n`
 	);
 }
 
