@@ -1,8 +1,8 @@
 const fs = require('fs/promises');
 const { execFileSync } = require('child_process');
-const helpers = require('../../app/lib/helpers/addNoteHelpers');
-const addNote = require('../../app/lib/programs/add-note');
-const { pathToReset, pathToCheatSheets } = require('../../../config');
+const helpers = require('../../app/lib/utils/addNoteHelpers');
+const addNote = require('../../app/lib/programs/addNote');
+const { pathToReset } = require('../../../config');
 
 jest.mock('fs/promises', () => {
 	return {
@@ -18,7 +18,7 @@ jest.mock('fs/promises', () => {
 			)
 	};
 });
-jest.mock('../../app/lib/helpers/addNoteHelpers', () => {
+jest.mock('../../app/lib/utils/addNoteHelpers', () => {
 	return {
 		queryTopic: jest.fn().mockImplementation(async () => 'backend'),
 		queryTech: jest.fn().mockImplementation(async () => 'express'),

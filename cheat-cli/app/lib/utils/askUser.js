@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { printErrorMessage } = require('./text-formatting');
+const { printErrorMessage } = require('./printMessage');
 
 async function askUser(questions, invalidAnswers, invalidMsg) {
 	const preparedQuestions = Array.isArray(questions) ? questions : [questions];

@@ -5,7 +5,7 @@ const {
 	queryTopic,
 	queryTech,
 	collectNoteData
-} = require('../helpers/addNoteHelpers');
+} = require('../utils/addNoteHelpers');
 
 async function addNote() {
 	const topicChoice = await queryTopic();

@@ -1,13 +1,9 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { pathToCheatSheets } = require('../../../../config');
 const askUser = require('./askUser');
-const {
-	removeFileExtension,
-	printErrorMessage,
-	kebabCase
-} = require('./text-formatting');
-
+const { pathToCheatSheets } = require('../../../../config');
+const { printErrorMessage } = require('./printMessage');
+const { removeFileExtension, kebabCase } = require('./textFormatting');
 async function queryTopic() {
 	const currTopics = await fs.readdir(
 		path.resolve(__dirname, pathToCheatSheets)

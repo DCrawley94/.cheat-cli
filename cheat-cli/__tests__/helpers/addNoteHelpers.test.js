@@ -8,13 +8,13 @@ const {
 	queryTech,
 	collectNoteData,
 	checkIfNoteExists
-} = require('../../app/lib/helpers/addNoteHelpers');
+} = require('../../app/lib/utils/addNoteHelpers');
 
 // --- Declare Mocks ---
 jest.mock('inquirer');
 jest.mock('fs/promises');
 
-const consoleSpy = jest.spyOn(global.console, 'log');
+const consoleSpy = jest.spyOn(global.process.stdout, 'write');
 
 describe('queryTopic()', () => {
 	beforeEach(() => {
